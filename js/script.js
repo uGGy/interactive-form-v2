@@ -81,46 +81,48 @@ design.addEventListener('change', () => {
 // Register for Activities Section: Additioning Total $ & Disabling conflicting Activites
 
 const activitySection = document.querySelector('fieldset[class="activities"]');
-const activityInput = document.querySelectorAll('fieldset[class="activities"] input');
+
+const activityInput = document.querySelectorAll('.activities input');
 var input = document.querySelectorAll('input[type="checkbox"]');
-let totalActivityCost = 0;
 
 let costDisplay = document.createElement('span')
 costDisplay.setAttribute('name', 'total');
 activitySection.append(costDisplay);
-console.log(input);
+let totalActivityCost = 0;
 
 activitySection.addEventListener('change', (e) => {
-    var clicked = e.target;
-    var inputAttr = clicked.getAttribute('data-cost');
-    totalActivityCost = parseInt(inputAttr, 10);   
-    costDisplay.innerText = "Total: $ " + totalActivityCost;
+  var clicked = e.target;
+  var clickedType = clicked.getAttribute('data-day-and-time');
+  console.log(clickedType);
 
-    function totalSum() {
-        for(let i = 0; i < 6 ; i++) {
-          if (input[i].checked == true && totalActivityCost.value !== NaN) {
-            totalActivityCost = parseInt(inputAttr, 10);
-            totalActivityCost++
-          } else {
-              totalActivityCost--
-          }
-        } 
+
+    //Checkbox 
+  for (let j = 0; j < activityInput.length; j++) {
+      var checkboxType = activityInput[j].getAttribute('data-day-and-time');
+      if (clickedType === checkboxType && clicked !== activityInput[j]) {   
+        if(clicked.checked) {
+            activityInput[j].disabled = true;
+        } else {
+            activityInput[j].disabled = false;
         }
-     function EnableSameActivities() {
-         var inputAttrDayTime = clicked.getAttribute('data-day-and-time');
-        //  console.log(inputAttrDayTime);
-         for (let i = 0; i < input.length ; i++) {
-             var elementChecked = input[i].checked;
-             console.log(elementChecked);
-             if(elementChecked === inputAttrDayTime && elementChecked == true) {
-                 input.style.disabled = true; 
-             }
-         }
-         
-     }
-        
+      }
+  }
+
+  
+  var inputAttr = clicked.getAttribute('data-cost');
+  function totalSum() {
+    totalActivityCost = 0;
+    for (let i = 0; i < 7; i++) {
+      if (input[i].checked === true) {
+        totalActivityCost = totalActivityCost +  parseInt(input[i].getAttribute('data-cost'), 10);
+      }
+    }
+  }
+
+     
       totalSum();
-      EnableSameActivities();
+      costDisplay.innerText = "Total: $ " + totalActivityCost;
+
 
 });
 
@@ -173,6 +175,8 @@ const cardNum = document.getElementById('cc-num');
 const zipCode = document.getElementById('zip');
 const cvv = document.getElementById('cvv');
 
+
+
 const nameValidator = () => {
     let nameValue = name.value;
     if (nameValue.length > 0) {
@@ -194,6 +198,17 @@ const emailValidator = () => {
 
 }
 
+const activitiesValidator = () => {
+        if (activityInput.checked === true) {
+            return true; 
+        } else {
+            return false; 
+        }
+
+    
+}
+
+
 const cardNumValidator = () => {
     let cardNumValue = cardNum.value;
     let cardNumRegex = /[0-9]{12}(?:[0-9]{3})?$/;
@@ -202,9 +217,11 @@ const cardNumValidator = () => {
 
     let zipCodeValue = zipCode.value;
     const zipCodeRegex = /^\d{5}$/;
+  
 
     let cvvValue = cvv.value; 
     let cvvRegex = /^[0-9]{3}$/;
+
    
     if (cardNumRegex.test(cardNumValue) === true && zipCodeRegex.test(zipCodeValue) === true && cvvRegex.test(cvvValue) === true ) {
         return true;
@@ -215,26 +232,30 @@ const cardNumValidator = () => {
 }
 
 form.addEventListener('submit', (e) => {
-    e.preventDefault();
+
     nameValidator();  
-   
-    if(!nameValidator()) {
+   if(!nameValidator()) {
         e.preventDefault();
         alert('Please type a name');
     }
 
     emailValidator();
-
     if(!emailValidator()) {
         e.preventDefault();
-        alert('Please type your email address');
+        alert('Please type a valid email address');
 
+    }
+
+    activitiesValidator();
+    if (!activitiesValidator()) {
+        e.preventDefault();
+        alert('Please Select At Least One Activity');
     }
 
     cardNumValidator();
     if(!cardNumValidator() && paymentSelect[1].selected == true ) {
         e.preventDefault();
-        alert('Please check your Card infos');
+        alert('Please check your Card infos. \n Card Number must be 13 - 16 digits. \n ZIP Code must be 5 digits. \n CVV 3 must be digits.');
     }
 
 
