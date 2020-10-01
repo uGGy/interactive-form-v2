@@ -199,12 +199,16 @@ const emailValidator = () => {
 }
 
 const activitiesValidator = () => {
-        if (activityInput.checked === true) {
-            return true; 
-        } else {
-            return false; 
-        }
+        for (let i = 0; i < activityInput.length; i ++) {
+            if (activityInput[i].checked === true) {
+                return true; 
+            } else {
+                return false; 
+            }
+    
 
+        }
+     
     
 }
 
