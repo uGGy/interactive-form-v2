@@ -199,18 +199,16 @@ const emailValidator = () => {
 }
 
 const activitiesValidator = () => {
-        for (let i = 0; i < activityInput.length; i ++) {
-            if (activityInput[i].checked === true) {
-                return true; 
-            } else {
-                return false; 
-            }
-    
-
-        }
-     
-    
-}
+    const checkedInput = [];
+          for (let i = 0; i < activityInput.length; i ++) {
+              if (activityInput[i].checked === true) {
+                  checkedInput.push(activityInput[i]);
+              }
+          }
+  
+          return checkedInput
+  }
+  
 
 
 const cardNumValidator = () => {
@@ -238,25 +236,29 @@ const cardNumValidator = () => {
 form.addEventListener('submit', (e) => {
 
     nameValidator();  
+
    if(!nameValidator()) {
         e.preventDefault();
-        alert('Please type a name');
+        alert('Please type a name.');
     }
 
     emailValidator();
+
     if(!emailValidator()) {
         e.preventDefault();
-        alert('Please type a valid email address');
+        alert('Please type a valid email address.');
 
     }
 
     activitiesValidator();
-    if (!activitiesValidator()) {
-        e.preventDefault();
-        alert('Please Select At Least One Activity');
-    }
 
+    if (activitiesValidator().length <= 0) {
+        e.preventDefault();
+        alert('Please select at least one activity.');
+    }
+    
     cardNumValidator();
+
     if(!cardNumValidator() && paymentSelect[1].selected == true ) {
         e.preventDefault();
         alert('Please check your Card infos. \n Card Number must be 13 - 16 digits. \n ZIP Code must be 5 digits. \n CVV 3 must be digits.');
