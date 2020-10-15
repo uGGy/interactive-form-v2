@@ -188,8 +188,10 @@ const nameValidator = () => {
 
 const emailValidator = () => {
     let emailValue = email.value;
+    let emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+    emailRegex.test(emailValue);
     let atI = emailValue.indexOf('@');
-    let pointI = emailValue.indexOf('@');
+    let pointI = emailValue.indexOf('.');
     if (atI > 0 && pointI > 0) {
         return true;
     } else {
